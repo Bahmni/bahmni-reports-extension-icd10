@@ -3,7 +3,7 @@ package org.bahmni.reports.extensions.icd10;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.bahmni.reports.extensions.icd10.Impl.Icd10LookupServiceImpl;
+import org.bahmni.reports.extensions.icd10.impl.Icd10LookupServiceImpl;
 import org.bahmni.reports.extensions.icd10.bean.IcdRule;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;

@@ -1,4 +1,4 @@
-package org.bahmni.reports.extensions.icd10.Impl;
+package org.bahmni.reports.extensions.icd10.impl;
 
 import org.bahmni.reports.extensions.icd10.Icd10LookupService;
 import org.bahmni.reports.extensions.icd10.bean.IcdResponse;
