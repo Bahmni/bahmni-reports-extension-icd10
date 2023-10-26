@@ -84,10 +84,7 @@ public class Icd10LookupServiceImpl implements Icd10LookupService {
 
     private String getIcdBaseUrl() {
         String icd10BaseUrl = System.getenv("ICD10_BASE_URL");
-        if (icd10BaseUrl == null) {
-            return icd10Properties.getProperty("icd.baseUrl");
-        }
-        return icd10BaseUrl;
+        return (icd10BaseUrl != null) ? icd10BaseUrl : icd10Properties.getProperty("icd.baseUrl");
     }
 
     private HttpHeaders getHeaders() {
