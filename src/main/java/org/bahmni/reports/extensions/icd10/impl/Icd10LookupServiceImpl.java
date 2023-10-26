@@ -70,7 +70,7 @@ public class Icd10LookupServiceImpl implements Icd10LookupService {
 
     private URI getEndPoint(String snomedCode, Integer offset, Integer limit) {
         try {
-            UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromUriString(icd10Properties.getProperty("icd.baseUrl"))
+            UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromUriString(getIcdBaseUrl())
                     .queryParam("offset", offset)
                     .queryParam("termActive", true)
                     .queryParam("ecl", encode(getEclUrl(snomedCode)))
@@ -80,6 +80,14 @@ public class Icd10LookupServiceImpl implements Icd10LookupService {
             logger.error("Error while encoding ecl url ", exception);
             throw new RuntimeException(exception);
         }
+    }
+
+    private String getIcdBaseUrl() {
+        String icd10BaseUrl = System.getenv("ICD10_BASE_URL");
+        if (icd10BaseUrl == null) {
+            return icd10Properties.getProperty("icd.baseUrl");
+        }
+        return icd10BaseUrl;
     }
 
     private HttpHeaders getHeaders() {
