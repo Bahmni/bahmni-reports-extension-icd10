@@ -1,0 +1,80 @@
+{
+  "resourceType": "Parameters",
+  "parameter": [
+    {
+      "name": "result",
+      "valueBoolean": false
+    },
+    {
+      "name": "message",
+      "valueString": "Please observe the following map advice. Group:1, Priority:1, Rule:IFA 248152002 | Female (finding) |, Advice:'IF FEMALE CHOOSE N97.9 | MAP IS CONTEXT DEPENDENT FOR GENDER', Map Category:'447639009'."
+    },
+    {
+      "name": "match",
+      "part": [
+        {
+          "name": "equivalence",
+          "valueCode": "unmatched"
+        },
+        {
+          "name": "concept",
+          "valueCoding": {
+            "system": "http://hl7.org/fhir/sid/icd-10",
+            "code": "N97.9"
+          }
+        },
+        {
+          "name": "source",
+          "valueString": "http://snomed.info/sct/900000000000207008/version/20230731?fhir_cm=447562003"
+        }
+      ]
+    },
+    {
+      "name": "message",
+      "valueString": "Please observe the following map advice. Group:1, Priority:2, Rule:IFA 248153007 | Male (finding) |, Advice:'IF MALE CHOOSE N46 | MAP IS CONTEXT DEPENDENT FOR GENDER', Map Category:'447639009'."
+    },
+    {
+      "name": "match",
+      "part": [
+        {
+          "name": "equivalence",
+          "valueCode": "unmatched"
+        },
+        {
+          "name": "concept",
+          "valueCoding": {
+            "system": "http://hl7.org/fhir/sid/icd-10",
+            "code": "N46"
+          }
+        },
+        {
+          "name": "source",
+          "valueString": "http://snomed.info/sct/900000000000207008/version/20230731?fhir_cm=447562003"
+        }
+      ]
+    },
+    {
+      "name": "message",
+      "valueString": "Please observe the following map advice. Group:1, Priority:3, Rule:OTHERWISE TRUE, Advice:'MAP SOURCE CONCEPT CANNOT BE CLASSIFIED WITH AVAILABLE DATA', Map Category:'447638001'."
+    },
+    {
+      "name": "match",
+      "part": [
+        {
+          "name": "equivalence",
+          "valueCode": "unmatched"
+        },
+        {
+          "name": "concept",
+          "valueCoding": {
+            "system": "http://hl7.org/fhir/sid/icd-10"
+          }
+        },
+        {
+          "name": "source",
+          "valueString": "http://snomed.info/sct/900000000000207008/version/20230731?fhir_cm=447562003"
+        }
+      ]
+    }
+  ]
+}

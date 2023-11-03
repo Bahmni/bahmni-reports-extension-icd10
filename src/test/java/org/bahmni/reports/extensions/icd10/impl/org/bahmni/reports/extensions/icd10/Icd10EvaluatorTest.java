@@ -117,7 +117,7 @@ public class Icd10EvaluatorTest {
     }
 
     List<IcdRule> getMockMapRules(String filePath) {
-        IcdResponse icdResponse = Icd10LookupServiceImplTest.getMockIcdResponse(filePath);
+        IcdResponse icdResponse = Icd10LookupServiceImplTest.getMockSnowstormIcdResponse(filePath);
         return icdResponse.getItems().stream().sorted(Icd10LookupServiceImpl.customComparator).collect(Collectors.toList());
     }
 }

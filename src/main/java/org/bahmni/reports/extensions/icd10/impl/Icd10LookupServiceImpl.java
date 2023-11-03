@@ -1,5 +1,7 @@
 package org.bahmni.reports.extensions.icd10.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.bahmni.reports.extensions.icd10.Icd10LookupService;
 import org.bahmni.reports.extensions.icd10.bean.IcdResponse;
 import org.bahmni.reports.extensions.icd10.bean.IcdRule;
@@ -7,6 +9,7 @@ import org.apache.logging.log4j.LogManager;
 
 
 import org.apache.logging.log4j.Logger;
+import org.bahmni.reports.extensions.util.FhirParserUtil;
 import org.bahmni.reports.extensions.util.PropertyUtil;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -27,6 +30,9 @@ public class Icd10LookupServiceImpl implements Icd10LookupService {
     private static final String ICD_PROPERTIES_FILENAME = "icd-service-config.properties";
     private static final Properties icd10Properties = loadIcdProperties();
     private RestTemplate restTemplate = new RestTemplate();
+    private ObjectMapper mapper = new ObjectMapper();
+    private FhirParserUtil fhirParserUtil = new FhirParserUtil();
+
 
     static Properties loadIcdProperties() {
         return PropertyUtil.loadProperties(ICD_PROPERTIES_FILENAME);
@@ -43,7 +49,7 @@ public class Icd10LookupServiceImpl implements Icd10LookupService {
                 icdResponse = getResponse(encodedURI);
                 icdRules.addAll(icdResponse.getItems());
                 offset += limit;
-            } while (offset < icdResponse.getTotal());
+            } while (offset < icdResponse.getItems().size());
             return icdRules.stream().sorted(customComparator).collect(Collectors.toList());
         } catch (Exception exception) {
             logger.error(String.format("Error caused during ICD lookup rest call: %s", exception.getMessage()));
@@ -61,9 +67,19 @@ public class Icd10LookupServiceImpl implements Icd10LookupService {
     }
 
     private IcdResponse getResponse(URI encodedURI) {
-        ResponseEntity<IcdResponse> responseEntity = restTemplate.exchange(encodedURI, HttpMethod.GET, new org.springframework.http.HttpEntity<>(null, getHeaders()), IcdResponse.class);
+        ResponseEntity<String> responseEntity = restTemplate.exchange(encodedURI, HttpMethod.GET, new org.springframework.http.HttpEntity<>(null, getHeaders()), String.class);
         if (responseEntity.getStatusCode().is2xxSuccessful()) {
-            return responseEntity.getBody();
+            String responseStr = responseEntity.getBody();
+            try {
+                Map<String, String> responseMap = mapper.readValue(responseStr, Map.class);
+                if("Parameters".equals(responseMap.get("resourceType"))) {
+                    return fhirParserUtil.extractIcdRules(responseStr);
+                }else{
+                    return mapper.readValue(responseStr, IcdResponse.class);
+                }
+            } catch (JsonProcessingException e) {
+                return new IcdResponse();
+            }
         }
         return new IcdResponse();
     }
