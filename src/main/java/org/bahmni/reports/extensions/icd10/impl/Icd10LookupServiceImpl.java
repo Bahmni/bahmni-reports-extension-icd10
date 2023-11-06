@@ -2,26 +2,31 @@ package org.bahmni.reports.extensions.icd10.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.bahmni.reports.extensions.icd10.Icd10LookupService;
 import org.bahmni.reports.extensions.icd10.bean.IcdResponse;
 import org.bahmni.reports.extensions.icd10.bean.IcdRule;
-import org.apache.logging.log4j.LogManager;
-
-
-import org.apache.logging.log4j.Logger;
 import org.bahmni.reports.extensions.util.FhirParserUtil;
 import org.bahmni.reports.extensions.util.PropertyUtil;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
+
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 import java.util.stream.Collectors;
 
 public class Icd10LookupServiceImpl implements Icd10LookupService {
@@ -72,9 +77,9 @@ public class Icd10LookupServiceImpl implements Icd10LookupService {
             String responseStr = responseEntity.getBody();
             try {
                 Map<String, String> responseMap = mapper.readValue(responseStr, Map.class);
-                if("Parameters".equals(responseMap.get("resourceType"))) {
+                if ("Parameters".equals(responseMap.get("resourceType"))) {
                     return fhirParserUtil.extractIcdRules(responseStr);
-                }else{
+                } else {
                     return mapper.readValue(responseStr, IcdResponse.class);
                 }
             } catch (JsonProcessingException e) {
@@ -85,6 +90,15 @@ public class Icd10LookupServiceImpl implements Icd10LookupService {
     }
 
     private URI getEndPoint(String snomedCode, Integer offset, Integer limit) {
+        String icd10LiteIndicator = System.getenv("ICD10_LITE_INDICATOR");
+        if (Boolean.parseBoolean(icd10LiteIndicator)) {
+            return getLiteEndPoint(snomedCode);
+        }
+        return getSnowstormEndPoint(snomedCode, offset, limit);
+    }
+
+    @NotNull
+    private URI getSnowstormEndPoint(String snomedCode, Integer offset, Integer limit) {
         try {
             UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromUriString(getIcdBaseUrl())
                     .queryParam("offset", offset)
@@ -96,6 +110,12 @@ public class Icd10LookupServiceImpl implements Icd10LookupService {
             logger.error("Error while encoding ecl url ", exception);
             throw new RuntimeException(exception);
         }
+    }
+
+    @NotNull
+    private URI getLiteEndPoint(String snomedCode) {
+        String icdLiteUrlTemplate = icd10Properties.getProperty("icd.lite.urlTemplate");
+        return URI.create(String.format(icdLiteUrlTemplate, snomedCode));
     }
 
     private String getIcdBaseUrl() {
