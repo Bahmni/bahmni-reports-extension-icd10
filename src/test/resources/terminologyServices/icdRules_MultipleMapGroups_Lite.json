@@ -1,0 +1,57 @@
+{
+  "resourceType": "Parameters",
+  "parameter": [
+    {
+      "name": "result",
+      "valueBoolean": false
+    },
+    {
+      "name": "message",
+      "valueString": "Please observe the following map advice. Group:1, Priority:1, Rule:TRUE, Advice:'ALWAYS B20.8', Map Category:'447637006'."
+    },
+    {
+      "name": "match",
+      "part": [
+        {
+          "name": "equivalence",
+          "valueCode": "unmatched"
+        },
+        {
+          "name": "concept",
+          "valueCoding": {
+            "system": "http://hl7.org/fhir/sid/icd-10",
+            "code": "B20.8"
+          }
+        },
+        {
+          "name": "source",
+          "valueString": "http://snomed.info/sct/900000000000207008/version/20230731?fhir_cm=447562003"
+        }
+      ]
+    },
+    {
+      "name": "message",
+      "valueString": "Please observe the following map advice. Group:2, Priority:1, Rule:TRUE, Advice:'ALWAYS J17.8 | THIS CODE MAY BE USED IN THE PRIMARY POSITION WHEN THE MANIFESTATION IS THE PRIMARY FOCUS OF CARE', Map Category:'447637006'."
+    },
+    {
+      "name": "match",
+      "part": [
+        {
+          "name": "equivalence",
+          "valueCode": "unmatched"
+        },
+        {
+          "name": "concept",
+          "valueCoding": {
+            "system": "http://hl7.org/fhir/sid/icd-10",
+            "code": "J17.8"
+          }
+        },
+        {
+          "name": "source",
+          "valueString": "http://snomed.info/sct/900000000000207008/version/20230731?fhir_cm=447562003"
+        }
+      ]
+    }
+  ]
+}

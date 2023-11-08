@@ -7,10 +7,7 @@ import java.util.List;
 public class IcdResponse {
     List<IcdRule> items;
 
-    int total;
-
     public IcdResponse() {
-
     }
 
     public List<IcdRule> getItems() {
@@ -19,13 +16,5 @@ public class IcdResponse {
 
     public void setItems(List<IcdRule> items) {
         this.items = items;
-    }
-
-    public int getTotal() {
-        return total;
-    }
-
-    public void setTotal(int total) {
-        this.total = total;
     }
 }
